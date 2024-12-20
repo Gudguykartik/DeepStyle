@@ -24,10 +24,10 @@ A modern fashion e-commerce platform enhanced with AI-powered styling recommenda
 ## Demo
 
 ### Landing Page
-./landingpage.mp4
+![Landing Page Demo](./landingpage.mp4)
 
 ### AI Stylist Interface
-./chat.png
+![AI Stylist Chat Interface](./chat.png)
 
 ## Technology Stack
 
@@ -35,13 +35,14 @@ A modern fashion e-commerce platform enhanced with AI-powered styling recommenda
 - **Frontend Enhancement**: HTMX
 - **AI Integration**: Google-Fast-API
 - **Authentication**: Django Authentication System
+- **Database**: SQLite (default Django database)
 
 ## Installation
 
 1. Clone the repository:
 ```bash
-git clone [https://github.com/Gudguykartik/DeepStyle]
-cd [DeepStyle]
+git clone https://github.com/Gudguykartik/DeepStyle
+cd DeepStyle
 ```
 
 2. Create and activate a virtual environment:
@@ -79,6 +80,8 @@ The application requires the following environment variables:
 AI_SERVICE_KEY=your_ai_service_api_key
 ```
 
+Make sure to obtain your API key from Google Fast API service before running the application.
+
 ## Usage
 
 1. Register for an account or log in
@@ -86,6 +89,17 @@ AI_SERVICE_KEY=your_ai_service_api_key
 3. Interact with the AI Stylist for personalized recommendations
 4. Add items to cart and use the comparison feature
 5. Complete purchase through the secure checkout
+
+## Features in Detail
+
+### AI Fashion Stylist
+The AI Stylist provides personalized fashion advice using Google Fast API integration. It analyzes your preferences and purchase history to make informed style recommendations.
+
+### Real-time Updates
+Using HTMX, the application provides a smooth, dynamic experience without full page reloads. This includes:
+- Instant cart updates
+- Real-time product filtering
+- Smooth transitions between pages
 
 ## Contributing
 
@@ -99,4 +113,9 @@ AI_SERVICE_KEY=your_ai_service_api_key
 
 - Django community
 - HTMX creators
-- [Add other acknowledgments]
+- Google Fast API team
+- All contributors and testers
+
+## Support
+
+For any questions or issues, please open an issue in the GitHub repository.
