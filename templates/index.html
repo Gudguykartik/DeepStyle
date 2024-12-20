@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep^style - Fashion Store</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'hero.css' %}">
+    <link rel="stylesheet" href="{% static 'shop.css' %}">
+</head>
+<body>
+    <nav>
+        <div class="logo">Deep^style</div>
+        <div class="nav-links">
+            <a href="{% url 'frontend:chat' %}" class="nav-item">Chat</a>
+            <a href="{% url 'frontend:shop' %}" class="nav-item">Shop</a>
+            <a href="{% url 'frontend:cart' %}" class="nav-item">cart</a>
+            <a href="{% url 'frontend:dashboard' %}" class="nav-item">Dashboard</a>
+            <a href="#" class="nav-item">Journal</a>
+        </div>
+        <div class="nav-icons">
+            <span class="icon">🔍</span>
+            <span class="icon">👤</span>
+            <span class="icon">🛒</span>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <span class="emoji floating">🌻</span>
+                <h1 class="hero-title">
+                    <span class="title-line">Make Your</span>
+                    <span class="title-line">Fashion Look</span>
+                    <span class="title-line highlight">More Charming</span>
+                </h1>
+                <span class="emoji floating-delayed">🌺</span>
+            </div>
+            <div class="hero-images">
+                <div class="image-container main-image">
+                    <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8" alt="Fashion Model">
+                </div>
+                <div class="image-grid">
+                    <div class="image-container">
+                        <img src="https://images.unsplash.com/photo-1523398002811-999ca8dec234" alt="Fashion Item 1">
+                    </div>
+                    <div class="image-container">
+                        <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f" alt="Fashion Item 2">
+                    </div>
+                    <div class="image-container">
+                        <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b" alt="Fashion Item 3">
+                    </div>
+                    <div class="image-container">
+                        <img src="https://images.unsplash.com/photo-1475180098004-ca77a66827be" alt="Fashion Item 4">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="shop-section">
+            <div class="shop-header">
+                <h2>Featured Collection</h2>
+                <div class="shop-filters">
+                    <button class="filter-btn active">All</button>
+                    <button class="filter-btn">New In</button>
+                    <button class="filter-btn">Trending</button>
+                    <button class="filter-btn">Price: Low to High</button>
+                </div>
+            </div>
+            
+            <div class="products-grid">
+                <article class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27" alt="Product 1">
+                        <div class="product-overlay">
+                            <button class="quick-add">Quick Add</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Minimal Dress</h3>
+                        <p>$129.00</p>
+                    </div>
+                </article>
+                <article class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1434389677669-e08b4cac3105" alt="Product 2">
+                        <div class="product-overlay">
+                            <button class="quick-add">Quick Add</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Summer Blazer</h3>
+                        <p>$189.00</p>
+                    </div>
+                </article>
+                <article class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1475180098004-ca77a66827be" alt="Product 3">
+                        <div class="product-overlay">
+                            <button class="quick-add">Quick Add</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Classic Shirt</h3>
+                        <p>$89.00</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <div class="collection-info">
+            <div class="left-content">
+                <p class="subtitle">Summer Collection</p>
+                <h2>TRENDY AND<br>CLASSY FOR<br>NEW SEASON</h2>
+                <div class="quote">
+                    <p>"I'm very much of the 'buy less but buy better' persuasion but never really knew where to look."</p>
+                    <div class="signature">Josh Lackovic</div>
+                </div>
+            </div>
+            <div class="explore-circle">
+                <div class="circle-text">EXPLORE MORE COLLECTION</div>
+                <div class="circle-arrow">▶</div>
+            </div>
+        </div>
+
+        <div class="blog-preview">
+            <div class="date">31 May 2022 • Blog</div>
+            <div class="blog-title">
+                <span class="number">01</span>
+                <h3>Always be strong and have value</h3>
+                <span class="arrow-right">→</span>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

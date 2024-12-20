@@ -1,0 +1,52 @@
+{% for item in cart_items %}
+<div class="cart-item">
+    <img src="{{ item.image_url }}" alt="{{ item.product_name }}">
+    <div class="item-details">
+        <h3>{{ item.product_name }}</h3>
+        <p>Size: {{ item.size }}</p>
+        <p class="price">${{ item.price }}</p>
+    </div>
+    <div class="quantity">
+        <form class="qty-form" hx-post="{% url 'frontend:update_quantity' %}" hx-target="#cart-items">
+            {% csrf_token %}
+            <input type="hidden" name="item_id" value="{{ item.id }}">
+            <input type="hidden" name="action" value="decrease">
+            <button type="submit" class="qty-btn">-</button>
+        </form>
+        <span>{{ item.quantity }}</span>
+        <form class="qty-form" hx-post="{% url 'frontend:update_quantity' %}" hx-target="#cart-items">
+            {% csrf_token %}
+            <input type="hidden" name="item_id" value="{{ item.id }}">
+            <input type="hidden" name="action" value="increase">
+            <button type="submit" class="qty-btn">+</button>
+        </form>
+    </div>
+    <form class="remove-form" hx-post="{% url 'frontend:remove_from_cart' item.id %}" hx-target="#cart-items">
+        {% csrf_token %}
+        <button type="submit" class="remove-btn">×</button>
+    </form>
+</div>
+{% empty %}
+<div class="empty-cart">
+    <p>Your cart is empty</p>
+    <a href="{% url 'frontend:shop' %}" class="continue-shopping">Continue Shopping</a>
+</div>
+{% endfor %}
+
+{% if cart_items %}
+<div class="cart-summary">
+    <div class="summary-row">
+        <span>Subtotal</span>
+        <span>${{ subtotal }}</span>
+    </div>
+    <div class="summary-row">
+        <span>Shipping</span>
+        <span>Free</span>
+    </div>
+    <div class="summary-row total">
+        <span>Total</span>
+        <span>${{ total }}</span>
+    </div>
+    <button class="checkout-btn">Proceed to Checkout</button>
+</div>
+{% endif %}

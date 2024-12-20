@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Seller Dashboard</title>
+    <link rel="stylesheet" href="{% static 'dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'products.css' %}">
+    <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>Deep^style</h2>
+            </div>
+            <nav>
+                <ul>
+                    <li>
+                        <a href="{% url 'frontend:dashboard' %}">
+                            <span class="icon">📊</span>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="{% url 'frontend:products' %}">
+                            <span class="icon">📦</span>
+                            Products
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'frontend:analytics' %}">
+                            <span class="icon">📈</span>
+                            Analytics
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search products..." 
+                           hx-get="{% url 'frontend:products' %}"
+                           hx-trigger="keyup changed delay:500ms"
+                           hx-target="#products-grid"
+                           name="search">
+                </div>
+                <div class="user-profile">
+                    <span class="notifications">🔔</span>
+                    <div class="profile-pic">👤</div>
+                </div>
+            </header>
+
+            <!-- Products Content -->
+            <div class="products-container">
+                <!-- Filters Section -->
+                <div class="filters-section">
+                    <select name="gender" hx-get="{% url 'frontend:products' %}" 
+                            hx-trigger="change" hx-target="#products-grid">
+                        <option value="">All Genders</option>
+                        {% for gender in filter_options.gender %}
+                        <option value="{{ gender }}" {% if active_filters.gender == gender %}selected{% endif %}>
+                            {{ gender }}
+                        </option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="category" hx-get="{% url 'frontend:products' %}" 
+                            hx-trigger="change" hx-target="#products-grid">
+                        <option value="">All Categories</option>
+                        {% for category in filter_options.masterCategory %}
+                        <option value="{{ category }}" {% if active_filters.masterCategory == category %}selected{% endif %}>
+                            {{ category }}
+                        </option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="color" hx-get="{% url 'frontend:products' %}" 
+                            hx-trigger="change" hx-target="#products-grid">
+                        <option value="">All Colors</option>
+                        {% for color in filter_options.baseColour %}
+                        <option value="{{ color }}" {% if active_filters.baseColour == color %}selected{% endif %}>
+                            {{ color }}
+                        </option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="season" hx-get="{% url 'frontend:products' %}" 
+                            hx-trigger="change" hx-target="#products-grid">
+                        <option value="">All Seasons</option>
+                        {% for season in filter_options.season %}
+                        <option value="{{ season }}" {% if active_filters.season == season %}selected{% endif %}>
+                            {{ season }}
+                        </option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="brand" hx-get="{% url 'frontend:products' %}" 
+                            hx-trigger="change" hx-target="#products-grid">
+                        <option value="">All Brands</option>
+                        {% for brand in filter_options.brand %}
+                        <option value="{{ brand }}" {% if active_filters.brand == brand %}selected{% endif %}>
+                            {{ brand }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Products Grid -->
+                <div id="products-grid" class="products-grid">
+                    {% for product in products %}
+                    <div class="product-card">
+                        <div class="product-image">
+                            {% if product.image_url %}
+                            <img src="{{ product.image_url }}" alt="{{ product.productDisplayName }}">
+                            {% else %}
+                            <div class="placeholder-image">No Image</div>
+                            {% endif %}
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">{{ product.productDisplayName }}</h3>
+                            <div class="product-details">
+                                <span class="category">{{ product.masterCategory }}</span>
+                                <span class="gender">{{ product.gender }}</span>
+                            </div>
+                            <div class="product-meta">
+                                <span class="brand">{{ product.brand }}</span>
+                                <span class="color">{{ product.baseColour }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="no-products">
+                        <p>No products found matching your criteria.</p>
+                        <button onclick="clearFilters()">Clear Filters</button>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    {% if has_prev %}
+                    <a href="?page={{ prev_page }}{% for key, value in current_filters.items %}&{{ key }}={{ value }}{% endfor %}" class="page-link">&laquo; Previous</a>
+                    {% endif %}
+                    
+                    <span class="current-page">Page {{ current_page }} of {{ total_pages }}</span>
+                    
+                    {% if has_next %}
+                    <a href="?page={{ next_page }}{% for key, value in current_filters.items %}&{{ key }}={{ value }}{% endfor %}" class="page-link">Next &raquo;</a>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function clearFilters() {
+            document.querySelectorAll('.filters-section select').forEach(select => {
+                select.value = '';
+            });
+            window.location.href = "{% url 'frontend:products' %}";
+        }
+    </script>
+</body>
+</html>

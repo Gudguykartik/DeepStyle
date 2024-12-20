@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Style Assistant - Deep^style</title>
+    <link rel="stylesheet" href="{% static 'chat.css' %}">
+    <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+    <style>
+        #chat-messages {
+            max-height: 400px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+        
+        #chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        #chat-messages::-webkit-scrollbar-thumb {
+            background: #FFD700;
+            border-radius: 4px;
+        }
+        
+        #chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #FFE44D;
+        }
+    </style>
+    <script>
+        document.body.addEventListener('htmx:configRequest', (event) => {
+            event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+        });
+
+        // Initial scroll to bottom when page loads
+        window.addEventListener('load', () => {
+            const chatMessages = document.querySelector('#chat-messages');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+    </script>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <img src="https://placehold.co/70x70/FFD700/ffffff.png?text=AI" alt="Fashion AI Model" class="model-avatar">
+            <div class="header-info">
+                <h2>Fashion Style Assistant</h2>
+                <p>Your personal style advisor | Available 24/7</p>
+            </div>
+        </div>
+
+        <div id="chat-messages" class="chat-messages">
+            <div class="message ai">
+                <p>Hi! I'm your AI fashion advisor. I can help you create perfect outfit combinations and suggest styles that match your taste. What would you like to try today?</p>
+            </div>
+            
+            <div class="message user">
+                <p>I want to wear a camel coat with black jeans. What do you think?</p>
+            </div>
+            
+            <div class="message ai">
+                <p>That's a fantastic choice! A camel coat with black jeans creates a timeless, sophisticated look. I'd suggest pairing it with:</p>
+            </div>
+
+            <div class="message ai">
+                <p>• A white or cream turtleneck for elegance<br>
+                   • Chelsea boots in black or brown<br>
+                   • A minimal silver watch as an accent<br>
+                   Would you like to see some specific pieces I recommend?</p>
+            </div>
+        </div>
+
+        <form hx-post="{% url 'frontend:send_message' %}" 
+              hx-target="#chat-messages"
+              hx-swap="beforeend"
+              hx-target-error="#chat-messages"
+              hx-on::before-request="
+                const userMsg = this.querySelector('input[name=message]').value;
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'message user';
+                msgDiv.innerHTML = '<p>' + userMsg + '</p>';
+                document.querySelector('#chat-messages').appendChild(msgDiv);
+                
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'message ai';
+                loadingDiv.id = 'loading-message';
+                loadingDiv.innerHTML = '<p>AI is thinking...</p>';
+                document.querySelector('#chat-messages').appendChild(loadingDiv);
+                
+                const chatMessages = document.querySelector('#chat-messages');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+              "
+              hx-on::after-request="
+                this.reset();
+                document.querySelector('#loading-message')?.remove();
+                const chatMessages = document.querySelector('#chat-messages');
+                setTimeout(() => {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 100);
+              "
+              class="chat-input">
+            {% csrf_token %}
+            <input type="text" 
+                   name="message" 
+                   placeholder="Describe your outfit idea..."
+                   required>
+            <button type="submit">Send</button>
+        </form>
+
+        <div id="outfit-suggestions" class="outfit-suggestions">
+            <h3>Recommended Pieces</h3>
+            <div class="suggestion-grid">
+                <div class="outfit-item">
+                    <img src="https://placehold.co/400x500/FFD700/ffffff.png?text=Camel+Coat" alt="Camel Coat">
+                    <h4>Classic Camel Coat</h4>
+                    <p>Perfect for layering</p>
+                </div>
+                <div class="outfit-item">
+                    <img src="https://placehold.co/400x500/1a1a1a/ffffff.png?text=Black+Jeans" alt="Black Jeans">
+                    <h4>Slim-Fit Black Jeans</h4>
+                    <p>Versatile everyday piece</p>
+                </div>
+                <div class="outfit-item">
+                    <img src="https://placehold.co/400x500/f5f5f5/1a1a1a.png?text=Turtleneck" alt="Turtleneck">
+                    <h4>Cream Turtleneck</h4>
+                    <p>Soft merino wool blend</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template for user message -->
+    <template id="user-message-template">
+        <div class="message user">
+            <p></p>
+        </div>
+    </template>
+
+    <!-- Template for AI message -->
+    <template id="ai-message-template">
+        <div class="message ai">
+            <p></p>
+        </div>
+    </template>
+</body>
+</html>

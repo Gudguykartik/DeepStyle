@@ -1,0 +1,173 @@
+/* Hero Section Styles */
+.hero-section {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 2rem;
+    margin: 2rem 0;
+    min-height: 90vh;
+    align-items: center;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    animation: fadeIn 1s ease;
+    padding: 2rem 0;
+}
+
+.hero-title {
+    font-size: 5.5rem;
+    line-height: 1.1;
+    margin: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.title-line {
+    animation: slideUp 1s ease;
+    opacity: 0;
+    transform: translateY(30px);
+    animation-fill-mode: forwards;
+}
+
+.title-line:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.title-line:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.title-line.highlight {
+    color: var(--text-dark);
+    position: relative;
+    display: inline-block;
+}
+
+.title-line.highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 0.2em;
+    left: 0;
+    width: 100%;
+    height: 0.2em;
+    background: var(--primary-yellow);
+    z-index: -1;
+    animation: widthIn 0.8s ease 0.8s forwards;
+    transform-origin: left;
+    transform: scaleX(0);
+}
+
+.emoji {
+    font-size: 2rem;
+    position: absolute;
+}
+
+.emoji:first-child {
+    top: 0;
+    left: 0;
+}
+
+.emoji:last-child {
+    bottom: 4rem;
+    right: 4rem;
+}
+
+.floating {
+    animation: float 3s ease-in-out infinite;
+}
+
+.floating-delayed {
+    animation: float 3s ease-in-out 1.5s infinite;
+}
+
+.hero-images {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 1rem;
+    height: 100%;
+}
+
+.image-container {
+    position: relative;
+    border-radius: 1rem;
+    overflow: hidden;
+    animation: scaleIn 1s ease;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.image-container:hover img {
+    transform: scale(1.05);
+}
+
+.main-image {
+    height: 100%;
+}
+
+.image-grid {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+@keyframes widthIn {
+    to {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 1024px) {
+    .hero-section {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+    }
+
+    .hero-images {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .image-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: 1fr;
+    }
+}

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Seller Dashboard</title>
+    <link rel="stylesheet" href="{% static 'dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'analytics.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>Deep^style</h2>
+            </div>
+            <nav>
+                <ul>
+                    <li>
+                        <a href="{% url 'frontend:dashboard' %}">
+                            <span class="icon">📊</span>
+                            Overview
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'frontend:products' %}">
+                            <span class="icon">📦</span>
+                            Products
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="{% url 'frontend:analytics' %}">
+                            <span class="icon">📈</span>
+                            Analytics
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search analytics...">
+                </div>
+                <div class="user-profile">
+                    <span class="notifications">🔔</span>
+                    <div class="profile-pic">👤</div>
+                </div>
+            </header>
+
+            <!-- Analytics Content -->
+            <div class="analytics-container">
+                <!-- Summary Cards -->
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <h3>Total Products</h3>
+                        <div class="value">{{ total_products }}</div>
+                        <div class="trend positive">Current Inventory</div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Categories</h3>
+                        <div class="value">{{ total_categories }}</div>
+                        <div class="trend neutral">Product Categories</div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Colors</h3>
+                        <div class="value">{{ total_colors }}</div>
+                        <div class="trend neutral">Color Variations</div>
+                    </div>
+                </div>
+
+                <!-- Filters Section -->
+                <div class="filters-section">
+                    <select name="category" 
+                            hx-get="{% url 'frontend:analytics' %}" 
+                            hx-trigger="change"
+                            hx-target="#analytics-charts"
+                            hx-swap="innerHTML">
+                        <option value="">All Categories</option>
+                        {% for category in filter_options.masterCategory %}
+                        <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>
+                            {{ category }}
+                        </option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="gender" 
+                            hx-get="{% url 'frontend:analytics' %}" 
+                            hx-trigger="change"
+                            hx-target="#analytics-charts"
+                            hx-swap="innerHTML">
+                        <option value="">All Genders</option>
+                        {% for gender in filter_options.gender %}
+                        <option value="{{ gender }}" {% if selected_gender == gender %}selected{% endif %}>
+                            {{ gender }}
+                        </option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="season" 
+                            hx-get="{% url 'frontend:analytics' %}" 
+                            hx-trigger="change"
+                            hx-target="#analytics-charts"
+                            hx-swap="innerHTML">
+                        <option value="">All Seasons</option>
+                        {% for season in filter_options.season %}
+                        <option value="{{ season }}" {% if selected_season == season %}selected{% endif %}>
+                            {{ season }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Charts Grid -->
+                <div id="analytics-charts">
+                    {% include 'analytics_charts.html' %}
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

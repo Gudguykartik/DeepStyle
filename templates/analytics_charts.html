@@ -1,0 +1,143 @@
+<!-- Charts Grid -->
+<div class="charts-grid">
+    <div class="chart-card">
+        <h3>Product Trends by Year</h3>
+        <div class="chart-container" style="height: 300px;">
+            <canvas id="yearlyTrendsChart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <h3>Color Distribution</h3>
+        <div class="chart-container" style="height: 300px;">
+            <canvas id="colorDistributionChart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <h3>Category Analysis</h3>
+        <div class="chart-container" style="height: 300px;">
+            <canvas id="categoryAnalysisChart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <h3>Gender Distribution</h3>
+        <div class="chart-container" style="height: 300px;">
+            <canvas id="genderAnalysisChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    function initializeCharts() {
+        // Destroy existing charts
+        ['yearlyTrendsChart', 'colorDistributionChart', 'categoryAnalysisChart', 'genderAnalysisChart'].forEach(chartId => {
+            const existingChart = Chart.getChart(chartId);
+            if (existingChart) {
+                existingChart.destroy();
+            }
+        });
+
+        // Initialize new charts
+        new Chart('yearlyTrendsChart', {
+            type: 'line',
+            data: {
+                labels: {{ yearly_trends_labels|safe }},
+                datasets: [{
+                    label: 'Number of Products',
+                    data: {{ yearly_trends_values|safe }},
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        new Chart('colorDistributionChart', {
+            type: 'polarArea',
+            data: {
+                labels: {{ color_dist_labels|safe }},
+                datasets: [{
+                    data: {{ color_dist_values|safe }},
+                    backgroundColor: {{ color_dist_labels|safe }}.map(color => color.toLowerCase())
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            padding: 20
+                        }
+                    }
+                }
+            }
+        });
+
+        new Chart('categoryAnalysisChart', {
+            type: 'bar',
+            data: {
+                labels: {{ category_stats_labels|safe }},
+                datasets: [{
+                    label: 'Products per Category',
+                    data: {{ category_stats_values|safe }},
+                    backgroundColor: '#36A2EB'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        new Chart('genderAnalysisChart', {
+            type: 'pie',
+            data: {
+                labels: {{ gender_dist_labels|safe }},
+                datasets: [{
+                    data: {{ gender_dist_values|safe }},
+                    backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Initialize charts when content is loaded
+    document.addEventListener('htmx:afterSwap', function(event) {
+        if (event.detail.target.id === 'analytics-charts') {
+            setTimeout(initializeCharts, 0);
+        }
+    });
+
+    // Initial load
+    setTimeout(initializeCharts, 0);
+</script>

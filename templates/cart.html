@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Deep^style</title>
+    <link rel="stylesheet" href="{% static 'cart.css' %}">
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <script>
+        // Add CSRF token to all HTMX requests
+        document.body.addEventListener('htmx:configRequest', function(evt) {
+            evt.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+        });
+    </script>
+    <style>
+        /* Only keep the form-specific styles */
+        .qty-form, .remove-form {
+            display: inline;
+            margin: 0;
+            padding: 0;
+        }
+
+        .quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Deep^style</div>
+        <div class="nav-links">
+            <a href="{% url 'frontend:shop' %}">Shop</a>
+            <a href="{% url 'frontend:cart' %}">Cart (<span id="cart-count">{{ cart_items|length }}</span>)</a>
+        </div>
+    </nav>
+    <div class="cart-container">
+        <div id="cart-items">
+            {% include 'cart_items.html' %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard</title>
+    <link rel="stylesheet" href="{% static 'dashboard.css' %}">
+    <script src="https://unpkg.com/htmx.org@2.0.3" integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>Deep^style</h2>
+            </div>
+            <nav>
+                <ul>
+                    <li class="active">
+                        <a href="{% url 'frontend:dashboard' %}">
+                            <span class="icon">📊</span>
+                            Overview
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'frontend:products' %}">
+                            <span class="icon">📦</span>
+                            Products
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'frontend:analytics' %}">
+                            <span class="icon">📈</span>
+                            Analytics
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="user-profile">
+                    <span class="notifications">🔔</span>
+                    <div class="profile-pic">👤</div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard">
+                <!-- Stats Cards -->
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h3>Total Products</h3>
+                        <p class="stat-value">{{ total_products }}</p>
+                        <span class="trend positive">↑ Active Items</span>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Brands</h3>
+                        <p class="stat-value">{{ total_brands }}</p>
+                        <span class="trend positive">↑ Unique Brands</span>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Categories</h3>
+                        <p class="stat-value">{{ category_stats_labels|length }}</p>
+                        <span class="trend neutral">→ Product Lines</span>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="dashboard-charts">
+                    <!-- Category Distribution Chart -->
+                    <div class="chart-card">
+                        <h3>Category Distribution</h3>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+
+                    <!-- Gender Distribution Chart -->
+                    <div class="chart-card">
+                        <h3>Gender Distribution</h3>
+                        <canvas id="genderChart"></canvas>
+                    </div>
+
+                    <!-- Top Brands Chart -->
+                    <div class="chart-card">
+                        <h3>Top Brands</h3>
+                        <canvas id="brandsChart"></canvas>
+                    </div>
+
+                    <!-- Season Distribution -->
+                    <div class="chart-card">
+                        <h3>Season Distribution</h3>
+                        <canvas id="seasonChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Sales Table -->
+                <div class="recent-sales">
+                    <h2>Recent Sales</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Fashion Jacket</td>
+                                <td>$129.99</td>
+                                <td>2024-01-20</td>
+                                <td><span class="status completed">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Designer Shoes</td>
+                                <td>$89.99</td>
+                                <td>2024-01-19</td>
+                                <td><span class="status pending">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td>Summer Dress</td>
+                                <td>$59.99</td>
+                                <td>2024-01-18</td>
+                                <td><span class="status completed">Completed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        .dashboard-charts {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .chart-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .chart-card canvas {
+            max-height: 200px !important;
+            width: 100% !important;
+        }
+        
+        .chart-card h3 {
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+    </style>
+    
+    <!-- Initialize Charts -->
+    <script>
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        boxWidth: 12,
+                        font: {
+                            size: 11
+                        }
+                    }
+                }
+            }
+        };
+
+        // Category Distribution Chart
+        new Chart(document.getElementById('categoryChart'), {
+            type: 'pie',
+            data: {
+                labels: {{ category_stats_labels|safe }},
+                datasets: [{
+                    data: {{ category_stats_values|safe }},
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'
+                    ]
+                }]
+            },
+            options: chartOptions
+        });
+
+        // Gender Distribution Chart
+        new Chart(document.getElementById('genderChart'), {
+            type: 'doughnut',
+            data: {
+                labels: {{ gender_dist_labels|safe }},
+                datasets: [{
+                    data: {{ gender_dist_values|safe }},
+                    backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
+                }]
+            },
+            options: chartOptions
+        });
+
+        // Top Brands Chart
+        new Chart(document.getElementById('brandsChart'), {
+            type: 'bar',
+            data: {
+                labels: {{ top_brands_labels|safe }},
+                datasets: [{
+                    label: 'Number of Products',
+                    data: {{ top_brands_values|safe }},
+                    backgroundColor: '#36A2EB'
+                }]
+            },
+            options: {
+                ...chartOptions,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            font: {
+                                size: 10
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 10
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Season Distribution Chart
+        new Chart(document.getElementById('seasonChart'), {
+            type: 'radar',
+            data: {
+                labels: {{ season_dist_labels|safe }},
+                datasets: [{
+                    label: 'Products per Season',
+                    data: {{ season_dist_values|safe }},
+                    fill: true,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    pointBackgroundColor: 'rgb(54, 162, 235)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(54, 162, 235)'
+                }]
+            },
+            options: {
+                ...chartOptions,
+                scales: {
+                    r: {
+                        ticks: {
+                            font: {
+                                size: 10
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

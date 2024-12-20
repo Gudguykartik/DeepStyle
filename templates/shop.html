@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - Deep^style</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'shop-page.css' %}">
+    <script src="https://unpkg.com/htmx.org@2.0.3" integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq" crossorigin="anonymous"></script>
+    <script>
+        // Add CSRF token to all HTMX requests
+        document.body.addEventListener('htmx:configRequest', function(evt) {
+            evt.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+        });
+    </script>
+    <style>
+        /* Size form styles */
+        .size-form {
+            display: inline;
+            margin: 0;
+            padding: 0;
+        }
+
+        .size-form button {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            margin: 0 5px;
+            padding: 0;
+            line-height: 35px;
+            text-align: center;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        .size-form button:hover {
+            background-color: #333;
+            color: white;
+            transform: scale(1.1);
+            border-color: #333;
+        }
+
+        /* Horizontal scrolling for all product sections */
+        .products-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            gap: 20px;
+            padding: 10px 0;
+        }
+
+        .products-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .products-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .products-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .products-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .product-item {
+            flex: 0 0 auto;
+            width: 300px;
+        }
+
+        /* Optional: Add padding to ensure last item is fully visible */
+        .shop-section {
+            padding: 0 20px;
+        }
+
+        /* Add this new style for the size options container */
+        .size-options {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">Deep^style</div>
+        <div class="nav-links">
+            <a href="/" class="nav-item">Home</a>
+            <a href="{% url 'frontend:shop' %}" class="nav-item active">Shop</a>
+            <a href="#" class="nav-item">Beauty</a>
+            <a href="#" class="nav-item">Sale</a>
+            <a href="#" class="nav-item">Journal</a>
+        </div>
+        <div class="nav-icons">
+            <span class="icon">🔍</span>
+            <span class="icon">👤</span>
+            <a href="{% url 'frontend:cart' %}" class="icon">
+                🛒 <span id="cart-count" class="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <header class="shop-hero">
+        <div class="floating-elements">
+            <span class="float-item">✨</span>
+            <span class="float-item">💫</span>
+            <span class="float-item">⭐</span>
+            <span class="float-item">🌟</span>
+        </div>
+        <h1 class="gradient-text">Discover Your Style</h1>
+        <p class="subtitle">Curated collection of premium fashion</p>
+        <div class="scroll-indicator">
+            <div class="mouse"></div>
+            <span>Scroll to explore</span>
+        </div>
+    </header>
+
+    <main class="shop-main">
+        <!-- Recommended Section -->
+        <section class="shop-section">
+            <div class="section-header">
+                <h2>Recommended For You</h2>
+                <p class="section-subtitle">Based on your style preferences</p>
+            </div>
+            <div class="products-container">
+                {% for item in recommended_items %}
+                <article class="product-item" data-category="recommended">
+                    <div class="product-image">
+                        <img src="{{ item.image_url|default:'https://via.placeholder.com/400x600' }}" alt="{{ item.productDisplayName }}">
+                        <div class="hover-info">
+                            <span class="availability">{{ item.masterCategory }}</span>
+                            <div class="size-options">
+                                <form class="size-form" hx-post="{% url 'frontend:add_to_cart' %}" hx-target="#cart-count">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product_id" value="{{ item.id }}">
+                                    <input type="hidden" name="product_name" value="{{ item.productDisplayName }}">
+                                    <input type="hidden" name="price" value="299.00">
+                                    <input type="hidden" name="image_url" value="{{ item.image_url }}">
+                                    <input type="hidden" name="size" value="S">
+                                    <button type="submit">S</button>
+                                </form>
+                                <form class="size-form" hx-post="{% url 'frontend:add_to_cart' %}" hx-target="#cart-count">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product_id" value="{{ item.id }}">
+                                    <input type="hidden" name="product_name" value="{{ item.productDisplayName }}">
+                                    <input type="hidden" name="price" value="299.00">
+                                    <input type="hidden" name="image_url" value="{{ item.image_url }}">
+                                    <input type="hidden" name="size" value="M">
+                                    <button type="submit">M</button>
+                                </form>
+                                <form class="size-form" hx-post="{% url 'frontend:add_to_cart' %}" hx-target="#cart-count">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product_id" value="{{ item.id }}">
+                                    <input type="hidden" name="product_name" value="{{ item.productDisplayName }}">
+                                    <input type="hidden" name="price" value="299.00">
+                                    <input type="hidden" name="image_url" value="{{ item.image_url }}">
+                                    <input type="hidden" name="size" value="L">
+                                    <button type="submit">L</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-details">
+                        <h3>{{ item.productDisplayName }}</h3>
+                        <p class="brand">{{ item.brand }}</p>
+                        <p class="color">{{ item.baseColour }}</p>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Trending Section -->
+        <section class="shop-section">
+            <div class="section-header">
+                <h2>Trending Now</h2>
+                <p class="section-subtitle">What's hot this season</p>
+            </div>
+            <div class="products-container">
+                {% for item in trending_items %}
+                <article class="product-item" data-category="trending">
+                    <div class="product-image">
+                        <img src="{{ item.image_url|default:'https://via.placeholder.com/400x600' }}" alt="{{ item.productDisplayName }}">
+                        <div class="hover-info">
+                            <span class="availability">{{ item.masterCategory }}</span>
+                            <div class="size-options">
+                                <form class="size-form" hx-post="{% url 'frontend:add_to_cart' %}" hx-target="#cart-count">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product_id" value="{{ item.id }}">
+                                    <input type="hidden" name="product_name" value="{{ item.productDisplayName }}">
+                                    <input type="hidden" name="price" value="299.00">
+                                    <input type="hidden" name="image_url" value="{{ item.image_url }}">
+                                    <input type="hidden" name="size" value="S">
+                                    <button type="submit">S</button>
+                                </form>
+                                <form class="size-form" hx-post="{% url 'frontend:add_to_cart' %}" hx-target="#cart-count">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product_id" value="{{ item.id }}">
+                                    <input type="hidden" name="product_name" value="{{ item.productDisplayName }}">
+                                    <input type="hidden" name="price" value="299.00">
+                                    <input type="hidden" name="image_url" value="{{ item.image_url }}">
+                                    <input type="hidden" name="size" value="M">
+                                    <button type="submit">M</button>
+                                </form>
+                                <form class="size-form" hx-post="{% url 'frontend:add_to_cart' %}" hx-target="#cart-count">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product_id" value="{{ item.id }}">
+                                    <input type="hidden" name="product_name" value="{{ item.productDisplayName }}">
+                                    <input type="hidden" name="price" value="299.00">
+                                    <input type="hidden" name="image_url" value="{{ item.image_url }}">
+                                    <input type="hidden" name="size" value="L">
+                                    <button type="submit">L</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-details">
+                        <h3>{{ item.productDisplayName }}</h3>
+                        <p class="brand">{{ item.brand }}</p>
+                        <p class="color">{{ item.baseColour }}</p>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Popular Section -->
+        <section class="shop-section">
+            <div class="section-header">
+                <h2>Most Popular</h2>
+                <p class="section-subtitle">Loved by our customers</p>
+            </div>
+            <div class="products-container">
+                {% for item in popular_items %}
+                <article class="product-item" data-category="popular">
+                    <div class="product-image">
+                        <img src="{{ item.image_url|default:'https://via.placeholder.com/400x600' }}" alt="{{ item.productDisplayName }}">
+                        <span class="popular-badge">★ 4.9</span>
+                        <div class="hover-info">
+                            <span class="availability">{{ item.masterCategory }}</span>
+                            <div class="size-options">
+                                <form class="size-form" hx-post="{% url 'frontend:add_to_cart' %}" hx-target="#cart-count">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product_id" value="{{ item.id }}">
+                                    <input type="hidden" name="product_name" value="{{ item.productDisplayName }}">
+                                    <input type="hidden" name="price" value="299.00">
+                                    <input type="hidden" name="image_url" value="{{ item.image_url }}">
+                                    <input type="hidden" name="size" value="S">
+                                    <button type="submit">S</button>
+                                </form>
+                                <form class="size-form" hx-post="{% url 'frontend:add_to_cart' %}" hx-target="#cart-count">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product_id" value="{{ item.id }}">
+                                    <input type="hidden" name="product_name" value="{{ item.productDisplayName }}">
+                                    <input type="hidden" name="price" value="299.00">
+                                    <input type="hidden" name="image_url" value="{{ item.image_url }}">
+                                    <input type="hidden" name="size" value="M">
+                                    <button type="submit">M</button>
+                                </form>
+                                <form class="size-form" hx-post="{% url 'frontend:add_to_cart' %}" hx-target="#cart-count">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product_id" value="{{ item.id }}">
+                                    <input type="hidden" name="product_name" value="{{ item.productDisplayName }}">
+                                    <input type="hidden" name="price" value="299.00">
+                                    <input type="hidden" name="image_url" value="{{ item.image_url }}">
+                                    <input type="hidden" name="size" value="L">
+                                    <button type="submit">L</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-details">
+                        <h3>{{ item.productDisplayName }}</h3>
+                        <p class="brand">{{ item.brand }}</p>
+                        <p class="color">{{ item.baseColour }}</p>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+</body>
+</html>
