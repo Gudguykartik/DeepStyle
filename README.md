@@ -24,26 +24,24 @@ A modern fashion e-commerce platform enhanced with AI-powered styling recommenda
 ## Demo
 
 ### Landing Page
-[Add your landing page video here]
+./landingpage.mp4
 
 ### AI Stylist Interface
-[Add your AI stylist screenshot here]
+./chat.png
 
 ## Technology Stack
 
 - **Backend**: Django
 - **Frontend Enhancement**: HTMX
-- **Database**: [Add your database choice]
-- **AI Integration**: [Add your AI service/model]
+- **AI Integration**: Google-Fast-API
 - **Authentication**: Django Authentication System
-- **Styling**: [Add your CSS framework/approach]
 
 ## Installation
 
 1. Clone the repository:
 ```bash
-git clone [your-repository-url]
-cd [repository-name]
+git clone [https://github.com/Gudguykartik/DeepStyle]
+cd [DeepStyle]
 ```
 
 2. Create and activate a virtual environment:
@@ -78,9 +76,6 @@ python manage.py runserver
 The application requires the following environment variables:
 
 ```
-SECRET_KEY=your_django_secret_key
-DEBUG=True/False
-DATABASE_URL=your_database_url
 AI_SERVICE_KEY=your_ai_service_api_key
 ```
 
@@ -99,14 +94,6 @@ AI_SERVICE_KEY=your_ai_service_api_key
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-## License
-
-[Add your license information here]
-
-## Contact
-
-[Add your contact information here]
 
 ## Acknowledgments
 
