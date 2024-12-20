@@ -24,7 +24,9 @@ A modern fashion e-commerce platform enhanced with AI-powered styling recommenda
 ## Demo
 
 ### Landing Page
-![Landing Page Demo](./landingpage.mp4)
+https://github.com/Gudguykartik/DeepStyle/raw/main/landingpage.mp4
+
+Watch the demo video above to see the application's landing page and core features in action.
 
 ### AI Stylist Interface
 ![AI Stylist Chat Interface](./chat.png)
